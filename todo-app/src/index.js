@@ -13,9 +13,7 @@ import '@fontsource/poppins/700.css';
 ReactDOM.render(
   <Provider store={store}>
     <TodoModal />
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
+    <App />
   </Provider>,
   document.getElementById('root')
 );
