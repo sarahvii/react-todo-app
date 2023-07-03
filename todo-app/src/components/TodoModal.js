@@ -7,23 +7,32 @@ import styles from '../styles/modules/modal.module.scss';
 import Button from './Button';
 import { addTodo } from '../slices/todoSlice';
 
-function TodoModal({ modalOpen, setModalOpen }) {
+function TodoModal({ type, modalOpen, setModalOpen }) {
   const [title, setTitle] = useState('');
   const [status, setStatus] = useState('incomplete');
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (title === '') {
+      toast.error('Please enter a title');
+      return;
+    }
     if (title && status) {
-      dispatch(
-        addTodo({
-          id: uuid(),
-          title,
-          status,
-          time: new Date().toLocaleString(),
-        })
-      );
-      toast.success('Task Added Successfully');
-      setModalOpen(false);
+      if (type === 'add') {
+        dispatch(
+          addTodo({
+            id: uuid(),
+            title,
+            status,
+            time: new Date().toLocaleString(),
+          })
+        );
+        toast.success('Task Added Successfully');
+        setModalOpen(false);
+      }
+      if (type === 'update') {
+        console.log('updating task');
+      }
     } else {
       toast.error('Title should not be empty');
     }
@@ -43,7 +52,9 @@ function TodoModal({ modalOpen, setModalOpen }) {
             <MdOutlineClose />
           </div>
           <form className={styles.form} onSubmit={(e) => handleSubmit(e)}>
-            <h1 className={styles.formTitle}>Add Task</h1>
+            <h1 className={styles.formTitle}>
+              {type === 'update' ? 'Update' : 'Add'} Task
+            </h1>
             <label htmlFor="title">
               Title
               <input
@@ -67,7 +78,7 @@ function TodoModal({ modalOpen, setModalOpen }) {
             </label>
             <div className={styles.buttonContainer}>
               <Button type="submit" variant="primary">
-                Add Task
+                {type === 'update' ? 'Update' : 'Add'} Task
               </Button>
               <Button
                 type="button"
